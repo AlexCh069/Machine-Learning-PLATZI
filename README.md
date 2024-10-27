@@ -1,0 +1,1 @@
+En este repositorio se almacenara todo lo trabajado en los cursos de platzi referentes a temas de MACHINE LEARNING
