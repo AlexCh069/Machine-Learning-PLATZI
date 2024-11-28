@@ -1,0 +1,10 @@
+name: proyects_learn
+channels:
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+  - https://repo.anaconda.com/pkgs/msys2
+dependencies:
+  - python=3.10
+  - ipykernel
+prefix: C:\Users\Ares\anaconda3\envs\proyects_learn
