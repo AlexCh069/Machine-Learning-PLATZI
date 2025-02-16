@@ -1,1 +1,9 @@
 5. MLOps/
+# Ignorar subcarpetas y archivos innecesarios
+2. tools_ml/
+CLUSTERING/
+REGRESION LINEAL/
+REGRESION LOGISTICA/
+4. PROYECTOS EN CIENCIA DE DATOS/
+*.ipynb_checkpoints/
+__pycache__/
