@@ -3,8 +3,9 @@ from datetime import datetime
 import zoneinfo
 from models import Customer, Transaction, Invoice, CustomerCreate
 from typing import List
+from db import SessionDep, create_all_tables
 
-app = FastAPI()
+app = FastAPI(lifespan=create_all_tables)
 # fastapi dev "para correr la api en modo dev"
 
 @app.get("/")
@@ -44,14 +45,32 @@ async def time_format(iso_code:str, formato:str):
 current_id: int = 0
 db_customers: List[Customer] = []
 
+# CREACION DE UN CUSTOMER
 @app.post('/customers', response_model = Customer) # Usamos el metodo post para la creacion
-async def create_customer(customer_data: CustomerCreate):    # Recibe los datos basicos para crear un Customer
+async def create_customer(customer_data: CustomerCreate, session: SessionDep):    # Recibe los datos basicos para crear un Customer
     customer = Customer.model_validate(customer_data.model_dump()) # Convierte los datos a un diccionario y valida la informacion ingresada
                                                                    # teniendo como base el modelo de Customer
                                                                    # Se crea un nuevo customer todos estos nuevos datos
-    customer.id = len(db_customers)     # Ya que customer contiene el campo id, aqui actualizamos el id teniendo en cuenta los ingresos anteriores de customers
-    db_customers.append(customer)       # Agregamos el nuevo customer a nuestra  "base de datos" provicional
+    session.add(customer)
+    session.commit()
+    session.refresh(customer)
+
+    # Ahora que la base de datos "sqlite3" genera el id, no necesitamos estas lineas
+    # customer.id = len(db_customers)     # Ya que customer contiene el campo id, aqui actualizamos el id teniendo en cuenta los ingresos anteriores de customers
+    # db_customers.append(customer)       # Agregamos el nuevo customer a nuestra  "base de datos" provicional
     return customer
+
+# OBTENER UN CUSTOMER (GET)
+@app.get('/customers', response_model = List[Customer])
+async def list_customers():
+    return db_customers
+
+@app.get('/customers/{id_customer}', response_model = Customer)
+async def get_customer(id_customer: int):
+    customer = db_customers[id_customer]
+    return customer
+
+
 
 @app.post('/transactions') # Usamos el metodo post para la creacion
 async def create_transaction(transaction_data: Transaction):

@@ -1,14 +1,15 @@
 from pydantic import BaseModel, EmailStr
+from sqlmodel import SQLModel, Field
 
 # Modelo para validar datos dentro de un endpoint 
-class CustomerBase(BaseModel):
-    name: str 
-    description: str | None # Puede tener o no tener descripcion
-    email: EmailStr
-    age: int
+class CustomerBase(SQLModel):
+    name: str = Field(default=None) 
+    description: str | None  = Field(default=None)# Puede tener o no tener descripcion
+    email: EmailStr = Field(default=None)
+    age: int = Field(default=None)
 
-class Customer(CustomerBase):
-    id: int | None = None       # No olvidar asignar el valor (asi sea nulo)
+class Customer(CustomerBase, table = True):
+    id: int | None = Field(default= None, primary_key=True)       # No olvidar asignar el valor (asi sea nulo)
 
 class CustomerCreate(CustomerBase):
     pass

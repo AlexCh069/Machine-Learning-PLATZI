@@ -38,3 +38,22 @@ async def time_format(iso_code:str, formato:str):
 ## Clase 6
 Modificar el modelo de customer el agregar la validacion correcta para el correo, probar con varios tipos de correso para ver como funciona la validacion.
 
+```python
+from pydantic import BaseModel, EmailStr
+
+class CustomerBase(BaseModel):
+    name: str 
+    description: str | None # Puede tener o no tener descripcion
+    email: EmailStr
+    age: int
+```
+
+# Clase 7
+Crear un nuevo metodo que por medio de un id te permita obtener un solo customer 
+
+```python
+@app.get('/customers/{id_customer}', response_model = Customer)
+async def get_customer(id_customer: int):
+    customer = db_customers[id_customer]
+    return customer
+```
